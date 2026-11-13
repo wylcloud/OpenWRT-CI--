@@ -1,20 +1,51 @@
-#科学插件调整,CONFIG_PACKAGE_luci-app-openclash=n
+# OpenWrt / ImmortalWrt 自定义编译配置片段
+# 用途：替换原自定义配置片段；不含设备目标，不能单独替代完整 .config。
+# 本次删除：NATMap、UPnP IGD / PCP / NAT-PMP、Gecoos AC 原生服务及管理入口。
+# 保留原有 CONFIG_...=n 写法；备注独立成行。
+# 兼容列出部分不同源中的包名；实际有效项以当前源码为准。
+# 合并配置并运行 make defconfig 后，需检查这些包是否被其他依赖重新选中。
+
+# 科学插件调整
+CONFIG_PACKAGE_luci-app-openclash=n
 CONFIG_PACKAGE_luci-app-homeproxy=n
-#增加插件
+
+# 增加插件
 CONFIG_PACKAGE_luci-app-autoreboot=y
-CONFIG_PACKAGE_luci-app-gecoosac=y
 CONFIG_PACKAGE_luci-app-mini-diskmanager=y
-CONFIG_PACKAGE_luci-app-natmapt=y
 CONFIG_PACKAGE_luci-app-partexp=y
 CONFIG_PACKAGE_luci-app-samba4=n
-CONFIG_PACKAGE_luci-app-upnp=y
 CONFIG_PACKAGE_luci-app-wolultra=y
 CONFIG_PACKAGE_luci-app-mosdns=y
 CONFIG_PACKAGE_luci-app-ddns-go=y
-#删除插件
+
+# 删除插件（原有设置）
 CONFIG_PACKAGE_luci-app-attendedsysupgrade=n
 CONFIG_PACKAGE_luci-app-wol=n
-#参数调整
+
+# 本次删除：NATMap 端口映射插件及后台程序
+# luci-app-natmapt：原配置中的 NATMap 管理页面
+# natmapt：与该页面配套的 NATMap 后台程序
+CONFIG_PACKAGE_luci-app-natmapt=n
+CONFIG_PACKAGE_natmapt=n
+# 同时禁用标准 NATMap 包及其管理页面（若当前源码提供）
+CONFIG_PACKAGE_luci-app-natmap=n
+CONFIG_PACKAGE_natmap=n
+
+# 本次删除：UPnP IGD 和 PCP/NAT-PMP 自动端口映射服务
+# luci-app-upnp：LuCI 管理页面
+CONFIG_PACKAGE_luci-app-upnp=n
+# miniupnpd：后台服务；兼容列出通用名称及 nftables/iptables 变体
+CONFIG_PACKAGE_miniupnpd=n
+CONFIG_PACKAGE_miniupnpd-nftables=n
+CONFIG_PACKAGE_miniupnpd-iptables=n
+
+# 本次删除：Gecoos AC（集客 AC）原生服务及管理入口
+# luci-app-gecoosac：LuCI 管理入口
+# gecoosac：集客 AC 原生后台服务
+CONFIG_PACKAGE_luci-app-gecoosac=n
+CONFIG_PACKAGE_gecoosac=n
+
+# 参数调整
 CONFIG_CCACHE=y
 CONFIG_DEVEL=y
 CONFIG_FEED_video=n
@@ -23,7 +54,8 @@ CONFIG_FEED_pon_userspace=n
 CONFIG_TARGET_MULTI_PROFILE=y
 CONFIG_TARGET_PER_DEVICE_ROOTFS=y
 CONFIG_TARGET_ROOTFS_INITRAMFS=n
-#内核调整
+
+# 内核调整
 CONFIG_PACKAGE_kmod-ata-ahci=y
 CONFIG_PACKAGE_kmod-ata-core=y
 CONFIG_PACKAGE_kmod-bonding=y
@@ -81,7 +113,8 @@ CONFIG_PACKAGE_kmod-usb-storage-uas=y
 CONFIG_PACKAGE_kmod-usb-uhci=y
 CONFIG_PACKAGE_kmod-veth=y
 CONFIG_PACKAGE_kmod-wireguard=y
-#组件调整
+
+# 组件调整
 CONFIG_PACKAGE_autocore=y
 CONFIG_PACKAGE_automount=y
 CONFIG_PACKAGE_blkid=y
@@ -119,6 +152,7 @@ CONFIG_PACKAGE_sfdisk=y
 CONFIG_PACKAGE_sgdisk=y
 CONFIG_PACKAGE_smartmontools=y
 CONFIG_PACKAGE_smartmontools-drivedb=y
+# 保留：独立的 STUN / NAT 类型检测工具；NATMap 插件也会用到它
 CONFIG_PACKAGE_stuntman-client=y
 CONFIG_PACKAGE_usb-modeswitch=y
 CONFIG_PACKAGE_usbmuxd=y
